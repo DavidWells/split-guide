@@ -1,4 +1,6 @@
-# split-guide
+# split-guide for yml
+
+Fork of split guide with yml comment support
 
 A tool to help generate code for workshop repositories
 

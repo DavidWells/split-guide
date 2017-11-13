@@ -1,6 +1,6 @@
 {
-  "name": "split-guide",
-  "version": "0.0.0-semantically-released",
+  "name": "split-guide-yml",
+  "version": "0.0.3",
   "description": "A tool to help generate code for workshop repositories",
   "main": "dist/index.js",
   "scripts": {

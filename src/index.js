@@ -12,6 +12,13 @@ const REGEX = {
   workshop: / *?\/\/ WORKSHOP_START.*?\n((.|\n|\r)*?) *\/\/ WORKSHOP_END.*?\n/g,
   comment: / *?\/\/ COMMENT_START.*?\n((.|\n|\r)*?) *\/\/ COMMENT_END.*?\n/g,
 }
+
+var YAMLREGEX = {
+  final: / *?# FINAL_START.*?\n((.|\n|\r)*?) *# FINAL_END.*?\n/g,
+  workshop: / *?# WORKSHOP_START.*?\n((.|\n|\r)*?) *# WORKSHOP_END.*?\n/g,
+  comment: / *?# COMMENT_START.*?\n((.|\n|\r)*?) *# COMMENT_END.*?\n/g,
+}
+
 const openFileLimit = pLimit(100)
 
 export default splitGuide
@@ -58,26 +65,30 @@ function splitGuide(
     return fileObjs.map(fileObj => {
       return Object.assign(
         {
-          finalContents: createFinalContents(fileObj.contents),
-          workshopContents: createWorkshopContents(fileObj.contents),
+          finalContents: createFinalContents(fileObj),
+          workshopContents: createWorkshopContents(fileObj),
         },
         fileObj,
       )
     })
   }
 
-  function createFinalContents(contents) {
+  function createFinalContents(fileObj) {
+    const contents = fileObj.contents
+    const regex = fileObj.file.match(/\.yml|\.yaml$/) ? YAMLREGEX : REGEX
     return contents
-      .replace(REGEX.final, '$1')
-      .replace(REGEX.workshop, '')
-      .replace(REGEX.comment, '')
+      .replace(regex.final, '$1')
+      .replace(regex.workshop, '')
+      .replace(regex.comment, '')
   }
 
-  function createWorkshopContents(contents) {
+  function createWorkshopContents(fileObj) {
+    const contents = fileObj.contents
+    const regex = fileObj.file.match(/\.yml|\.yaml$/) ? YAMLREGEX : REGEX
     return contents
-      .replace(REGEX.workshop, '$1')
-      .replace(REGEX.final, '')
-      .replace(REGEX.comment, '')
+      .replace(regex.workshop, '$1')
+      .replace(regex.final, '')
+      .replace(regex.comment, '')
   }
 
   function saveFiles(fileObjs) {
